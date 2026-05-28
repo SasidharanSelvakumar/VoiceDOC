@@ -1,0 +1,18 @@
+venv/
+.env
+__pycache__/
+*.pyc
+chroma_db/
+*.egg-info/
+dist/
+build/
+.DS_Store
+
+# User generated files and temp directories
+temp_uploads/
+temp_audio/
+*.pdf
+
+# Installer and Packaging artifacts
+Installer/
+*.spec

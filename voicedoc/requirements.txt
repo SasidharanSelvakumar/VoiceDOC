@@ -1,0 +1,12 @@
+langchain
+langchain-community
+chromadb
+pypdf
+rich
+gtts
+pygame
+python-dotenv
+fastapi
+uvicorn
+python-multipart
+pydantic
