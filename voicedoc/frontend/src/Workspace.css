@@ -1,6 +1,6 @@
 .workspace-container {
   min-height: 100vh;
-  background-color: #050505;
+  background-color: #050914;
   color: #f3f4f6;
   font-family: 'Inter', system-ui, sans-serif;
   position: relative;
@@ -16,8 +16,8 @@
   width: 100%;
   height: 100%;
   background-image: 
-    radial-gradient(circle at 15% 50%, rgba(168, 85, 247, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.03) 0%, transparent 50%);
+    radial-gradient(circle at 15% 50%, rgba(20, 184, 166, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(0, 255, 204, 0.03) 0%, transparent 50%);
   z-index: 0;
   pointer-events: none;
 }
@@ -30,7 +30,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: radial-gradient(#a855f7 1px, transparent 1px);
+  background-image: radial-gradient(#14b8a6 1px, transparent 1px);
   background-size: 100px 100px;
   background-position: 0 0, 50px 50px;
   opacity: 0.1;
@@ -62,10 +62,10 @@
 .sasi-s-logo {
   font-size: 3rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #a855f7, #10b981);
+  background: linear-gradient(135deg, #14b8a6, #00ffcc);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.3));
+  filter: drop-shadow(0 0 15px rgba(0, 255, 204, 0.3));
 }
 
 .workspace-title h1 {
@@ -103,7 +103,7 @@
 
 .icon-btn:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: #a855f7;
+  color: #00ffcc;
 }
 
 /* Settings Dropdown */
@@ -138,9 +138,9 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(168, 85, 247, 0.1);
-  border: 1px solid rgba(168, 85, 247, 0.3);
-  color: #a855f7;
+  background: rgba(20, 184, 166, 0.1);
+  border: 1px solid rgba(0, 255, 204, 0.3);
+  color: #00ffcc;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -204,9 +204,9 @@
 }
 
 .new-synthesis-btn:hover {
-  background: rgba(168, 85, 247, 0.1);
-  border-color: #a855f7;
-  color: #a855f7;
+  background: rgba(20, 184, 166, 0.1);
+  border-color: #00ffcc;
+  color: #00ffcc;
 }
 
 .search-bar-container {
@@ -228,7 +228,7 @@
 }
 
 .search-bar-container input:focus {
-  border-color: #a855f7;
+  border-color: #00ffcc;
 }
 
 .params-btn {
@@ -291,7 +291,7 @@
 
 .session-card:hover {
   background: #1a1a1a;
-  border-color: rgba(168, 85, 247, 0.2);
+  border-color: rgba(0, 255, 204, 0.2);
   transform: translateY(-2px);
 }
 
@@ -299,8 +299,8 @@
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: rgba(168, 85, 247, 0.1);
-  border: 1px solid rgba(168, 85, 247, 0.2);
+  background: rgba(20, 184, 166, 0.1);
+  border: 1px solid rgba(20, 184, 166, 0.2);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -342,13 +342,13 @@
 }
 
 .edit-name-btn:hover {
-  color: #a855f7;
-  background: rgba(168, 85, 247, 0.1);
+  color: #00ffcc;
+  background: rgba(0, 255, 204, 0.1);
 }
 
 .session-name-input {
   background: #1a1a1a;
-  border: 1px solid #a855f7;
+  border: 1px solid #14b8a6;
   color: #f3f4f6;
   font-size: 1.05rem;
   font-weight: 600;
@@ -372,7 +372,7 @@
 }
 
 .session-card:hover .session-arrow {
-  color: #a855f7;
+  color: #00ffcc;
 }
 
 .mock-card {

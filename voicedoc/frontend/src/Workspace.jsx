@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Settings, Plus, Search, MessageSquare, Clock, FileText, ChevronRight, Edit2 } from 'lucide-react';
+import { TextHoverEffect } from './components/TextHoverEffect';
 import './Workspace.css';
 
 const Workspace = ({ sessions, setSessions, setActiveSessionId, userEmail = "admin@sasi.ai" }) => {
@@ -62,10 +63,12 @@ const Workspace = ({ sessions, setSessions, setActiveSessionId, userEmail = "adm
 
       <div className="workspace-content">
         <header className="workspace-header">
-          <div className="workspace-logo-area">
-            <div className="sasi-s-logo">S</div>
+          <div className="workspace-logo-area" style={{ display: 'flex', flexDirection: 'row', gap: '15px' }}>
+            <div style={{ width: '180px', height: '50px' }}>
+              <TextHoverEffect text="SASI.AI" />
+            </div>
             <div className="workspace-title">
-              <h1>SASI.AI Workspace</h1>
+              <h1 style={{ margin: 0, alignSelf: 'flex-end', fontSize: '1.2rem', opacity: 0.8 }}>Workspace</h1>
               <p>System ready. Awaiting instructions.</p>
             </div>
           </div>
@@ -114,7 +117,7 @@ const Workspace = ({ sessions, setSessions, setActiveSessionId, userEmail = "adm
         <div className="sessions-section">
           <div className="sessions-header">
             <div className="sh-left">
-              <Clock size={16} color="#a855f7" />
+              <Clock size={16} color="#14b8a6" />
               <span>Recent Sessions</span>
             </div>
             <div className="sh-right">
@@ -130,7 +133,7 @@ const Workspace = ({ sessions, setSessions, setActiveSessionId, userEmail = "adm
                 onClick={() => handleOpenSession(session.id)}
               >
                 <div className="session-icon">
-                  <MessageSquare size={18} color="#a855f7" />
+                  <MessageSquare size={18} color="#14b8a6" />
                 </div>
                 <div className="session-info">
                   <div className="session-name-row">

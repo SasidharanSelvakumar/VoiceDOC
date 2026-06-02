@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bot, Mic, Shield, Zap, Database, ChevronRight, FileText, CheckCircle2, Terminal, Download } from 'lucide-react';
+import { BackgroundLines } from './components/BackgroundLines';
+import { TextHoverEffect } from './components/TextHoverEffect';
 import './LandingPage.css';
 
 const LandingPage = () => {
@@ -16,13 +18,12 @@ const LandingPage = () => {
       <div className="bg-elements">
         <div className="glow-orb purple-orb"></div>
         <div className="glow-orb magenta-orb"></div>
-        <div className="grid-overlay"></div>
+        <BackgroundLines />
       </div>
 
       <nav className="landing-nav">
-        <div className="nav-logo">
-          <div className="particle-s-small"></div>
-          <span>SASI.AI</span>
+        <div className="nav-logo" style={{ width: '200px', height: '60px' }}>
+          <TextHoverEffect text="SASI.AI" />
         </div>
         <button onClick={() => navigate('/login')} className="nav-cta" style={{ display: 'flex', alignItems: 'center' }}>
           Download App
@@ -98,9 +99,9 @@ const LandingPage = () => {
               accuracy, making document querying completely hands-free.
             </p>
             <ul className="detail-list">
-              <li><CheckCircle2 size={18} color="#a855f7" /> Real-time audio streaming</li>
-              <li><CheckCircle2 size={18} color="#a855f7" /> Local Whisper integration</li>
-              <li><CheckCircle2 size={18} color="#a855f7" /> Noise-cancellation compatible</li>
+              <li><CheckCircle2 size={18} color="#14b8a6" /> Real-time audio streaming</li>
+              <li><CheckCircle2 size={18} color="#14b8a6" /> Local Whisper integration</li>
+              <li><CheckCircle2 size={18} color="#14b8a6" /> Noise-cancellation compatible</li>
             </ul>
           </div>
           <div className="feature-detail-image-wrapper">
@@ -129,9 +130,9 @@ const LandingPage = () => {
               SASI.AI doesn't just guess. It reads your uploaded PDFs, extracts the most relevant context using ChromaDB, and generates precise answers with strict citations pointing exactly to the source document and page.
             </p>
             <ul className="detail-list">
-              <li><CheckCircle2 size={18} color="#ec4899" /> Hallucination-free responses</li>
-              <li><CheckCircle2 size={18} color="#ec4899" /> Direct page citations</li>
-              <li><CheckCircle2 size={18} color="#ec4899" /> Secure offline document processing</li>
+              <li><CheckCircle2 size={18} color="#00ffcc" /> Hallucination-free responses</li>
+              <li><CheckCircle2 size={18} color="#00ffcc" /> Direct page citations</li>
+              <li><CheckCircle2 size={18} color="#00ffcc" /> Secure offline document processing</li>
             </ul>
           </div>
           <div className="feature-detail-image-wrapper">
@@ -162,7 +163,7 @@ const LandingPage = () => {
             </div>
             <div className="demo-body">
               <div className="mock-sidebar">
-                <FileText size={24} color="#a855f7" />
+                <FileText size={24} color="#14b8a6" />
                 <div className="mock-line short"></div>
                 <div className="mock-line long"></div>
                 <div className="mock-line medium"></div>
@@ -185,9 +186,8 @@ const LandingPage = () => {
 
       <footer className="landing-footer">
         <div className="footer-content">
-          <div className="footer-logo">
-            <div className="particle-s-micro"></div>
-            <span>SASI.AI</span>
+          <div className="footer-logo" style={{ width: '150px', height: '40px' }}>
+            <TextHoverEffect text="SASI.AI" />
           </div>
           <p className="copyright">© {new Date().getFullYear()} SASI.AI. All Rights Reserved. Built for secure, local intelligence.</p>
         </div>

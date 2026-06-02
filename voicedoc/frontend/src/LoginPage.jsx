@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, User, ChevronRight, Loader2 } from 'lucide-react';
+import { BackgroundLines } from './components/BackgroundLines';
+import { TextHoverEffect } from './components/TextHoverEffect';
 import './LoginPage.css';
 
 const LoginPage = ({ setUserEmail }) => {
@@ -27,14 +29,16 @@ const LoginPage = ({ setUserEmail }) => {
     <div className="login-container">
       {/* Background Elements */}
       <div className="bg-elements">
-        <div className="glow-orb purple-orb"></div>
-        <div className="glow-orb emerald-orb"></div>
-        <div className="grid-overlay"></div>
+        <div className="glow-orb teal-orb"></div>
+        <div className="glow-orb cyan-orb"></div>
+        <BackgroundLines />
       </div>
 
       <div className="login-card">
         <div className="login-header">
-          <div className="particle-s-medium"></div>
+          <div style={{ width: '240px', height: '60px', margin: '0 auto 10px auto' }}>
+            <TextHoverEffect text="SASI.AI" />
+          </div>
           <h2>Welcome Back</h2>
           <p>Sign in to access your secure local workspace.</p>
         </div>

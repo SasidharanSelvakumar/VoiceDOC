@@ -1,6 +1,6 @@
 .landing-container {
   min-height: 100vh;
-  background-color: #050505; /* Deep dark, no blue tint */
+  background-color: #050914; /* Deep dark futuristic */
   color: #f3f4f6;
   font-family: 'Inter', system-ui, sans-serif;
   overflow-x: hidden;
@@ -32,7 +32,7 @@
 .purple-orb {
   width: 500px;
   height: 500px;
-  background: #a855f7;
+  background: #14b8a6; /* Ocean Teal */
   top: -10%;
   left: -10%;
 }
@@ -40,7 +40,7 @@
 .magenta-orb {
   width: 400px;
   height: 400px;
-  background: #ec4899;
+  background: #00ffcc; /* Aurora Mint */
   bottom: 20%;
   right: -5%;
   animation-delay: -5s;
@@ -53,9 +53,8 @@
   width: 100%;
   height: 100%;
   background-image: 
-    linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
+    linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 100% 40px;
   mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
   -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
 }
@@ -89,9 +88,9 @@
 .particle-s-small {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, #a855f7, #ec4899);
+  background: linear-gradient(135deg, #14b8a6, #00ffcc);
   border-radius: 8px;
-  box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.5);
 }
 
 .nav-cta {
@@ -132,9 +131,9 @@
 .badge {
   display: inline-block;
   padding: 0.4rem 1rem;
-  background: rgba(168, 85, 247, 0.15);
-  border: 1px solid rgba(168, 85, 247, 0.4);
-  color: #d8b4fe;
+  background: rgba(0, 255, 204, 0.1);
+  border: 1px solid rgba(0, 255, 204, 0.3);
+  color: #00ffcc;
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 600;
@@ -152,7 +151,7 @@
 }
 
 .text-gradient {
-  background: linear-gradient(to right, #a855f7, #ec4899);
+  background: linear-gradient(to right, #eab308, #fde047);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -177,21 +176,22 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, #a855f7, #ec4899);
-  color: white;
+  background: linear-gradient(135deg, #14b8a6, #00ffcc);
+  color: #050914;
   border: none;
   padding: 0.8rem 2rem;
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 700;
   border-radius: 30px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 10px 25px -5px rgba(168, 85, 247, 0.4);
+  box-shadow: 0 10px 25px -5px rgba(0, 255, 204, 0.4);
 }
 
 .primary-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 15px 30px -5px rgba(168, 85, 247, 0.6);
+  box-shadow: 0 15px 30px -5px rgba(0, 255, 204, 0.6);
+  background: linear-gradient(135deg, #00ffcc, #14b8a6);
 }
 
 .secondary-btn {
@@ -233,30 +233,30 @@
 }
 
 .feature-card {
-  background: rgba(20, 20, 20, 0.6);
+  background: rgba(10, 15, 30, 0.6);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 204, 0.05);
   padding: 2rem;
   border-radius: 20px;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .feature-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(168, 85, 247, 0.3);
-  box-shadow: 0 10px 30px -10px rgba(168, 85, 247, 0.2);
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(0, 255, 204, 0.3);
+  box-shadow: 0 15px 35px -10px rgba(0, 255, 204, 0.2);
 }
 
 .icon-wrapper {
   width: 56px;
   height: 56px;
-  background: rgba(168, 85, 247, 0.1);
+  background: rgba(234, 179, 8, 0.1);
   border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1.5rem;
-  color: #d8b4fe;
+  color: #facc15; /* Cyber Sand */
 }
 
 .feature-card h3 {
@@ -280,18 +280,19 @@
 }
 
 .glass-panel {
-  background: rgba(15, 15, 15, 0.7);
+  background: rgba(10, 15, 30, 0.7);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 255, 204, 0.15);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 255, 204, 0.1);
   transform: rotateX(5deg) scale(0.95);
-  transition: transform 0.5s ease;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease;
 }
 
 .glass-panel:hover {
   transform: rotateX(0deg) scale(1);
+  box-shadow: 0 35px 60px -12px rgba(0, 255, 204, 0.15), 0 0 0 1px rgba(0, 255, 204, 0.2);
 }
 
 .demo-header {
@@ -368,9 +369,9 @@
 }
 
 .user-mock {
-  align-self: flex-end;
-  background: rgba(168, 85, 247, 0.2);
-  border: 1px solid rgba(168, 85, 247, 0.3);
+  align-items: flex-end;
+  background: rgba(20, 184, 166, 0.2);
+  border: 1px solid rgba(20, 184, 166, 0.4);
   border-bottom-right-radius: 4px;
 }
 
@@ -402,7 +403,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #a855f7;
+  background: #00ffcc;
   opacity: 0.8;
 }
 
@@ -476,8 +477,8 @@
   opacity: 0.3;
 }
 
-.image-glow.purple { background: #a855f7; }
-.image-glow.magenta { background: #ec4899; }
+.image-glow.purple { background: #14b8a6; }
+.image-glow.magenta { background: #00ffcc; }
 
 .feature-detail-image {
   width: 100%;
@@ -502,7 +503,7 @@
   background: rgba(10, 10, 15, 0.9);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(168, 85, 247, 0.2);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 255, 204, 0.2);
   overflow: hidden;
   font-family: 'Fira Code', 'Courier New', Courier, monospace;
   position: relative;
@@ -544,9 +545,9 @@
 
 .log-time { color: #8b949e; }
 .log-info { color: #58a6ff; font-weight: bold; }
-.log-warn { color: #d2a8ff; font-weight: bold; }
-.log-success { color: #3fb950; font-weight: bold; }
-.log-stream { color: #a855f7; font-weight: bold; }
+.log-warn { color: #fde047; font-weight: bold; }
+.log-success { color: #00ffcc; font-weight: bold; }
+.log-stream { color: #14b8a6; font-weight: bold; }
 
 .terminal-cursor {
   display: inline-block;
@@ -594,7 +595,7 @@
 .particle-s-micro {
   width: 24px;
   height: 24px;
-  background: linear-gradient(135deg, #a855f7, #ec4899);
+  background: linear-gradient(135deg, #14b8a6, #00ffcc);
   border-radius: 6px;
 }
 

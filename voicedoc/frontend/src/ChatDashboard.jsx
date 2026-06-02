@@ -2,20 +2,21 @@ import React, { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { Send, Upload, Bot, User, Loader2, Mic, Paperclip, ArrowLeft } from 'lucide-react'
+import { TextHoverEffect } from './components/TextHoverEffect'
 import './ChatDashboard.css'
 
 const API_BASE_URL = 'http://localhost:8000'
 
 function ChatDashboard({ sessions, setSessions, activeSessionId }) {
   const navigate = useNavigate();
-  
+
   const [uploadStatus, setUploadStatus] = useState({ type: '', message: '' })
   const [isUploading, setIsUploading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isThinking, setIsThinking] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [isRecording, setIsRecording] = useState(false)
-  
+
   const messagesEndRef = useRef(null)
   const fileInputRef = useRef(null)
   const mediaRecorderRef = useRef(null)
@@ -51,7 +52,7 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
 
     setIsUploading(true)
     setUploadStatus({ type: 'info', message: 'Unifying context...' })
-    
+
     const formData = new FormData()
     formData.append('session_id', activeSessionId);
     files.forEach(f => formData.append('files', f))
@@ -63,9 +64,9 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
       setUploadStatus({ type: 'success', message: 'Context unified.' })
     } catch (error) {
       console.error("Upload error:", error)
-      setUploadStatus({ 
-        type: 'error', 
-        message: error.response?.data?.detail || 'Failed to unify context.' 
+      setUploadStatus({
+        type: 'error',
+        message: error.response?.data?.detail || 'Failed to unify context.'
       })
     } finally {
       setIsUploading(false)
@@ -75,10 +76,10 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
   const processChat = async (text) => {
     const userMsg = { role: 'user', content: text }
     updateActiveSession({ messages: [...messages, userMsg], modified: 'JUST NOW' });
-    
+
     // Naming the chat after the first message
     if (messages.length === 0) {
-       updateActiveSession({ name: text.length > 20 ? text.substring(0, 20) + '...' : text });
+      updateActiveSession({ name: text.length > 20 ? text.substring(0, 20) + '...' : text });
     }
 
     setIsLoading(true)
@@ -99,7 +100,7 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
-      
+
       let currentSources = [];
 
       while (true) {
@@ -113,7 +114,7 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
           if (line.startsWith("data: ")) {
             try {
               const data = JSON.parse(line.replace("data: ", ""));
-              
+
               if (data.token) {
                 fullAnswer += data.token;
                 setIsThinking(false);
@@ -121,20 +122,20 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
               if (data.sources) {
                 currentSources = data.sources;
               }
-              
+
               setSessions(prev => prev.map(s => {
-                  if (s.id === activeSessionId) {
-                      const newMessages = [...s.messages];
-                      if (newMessages.length > 0 && newMessages[newMessages.length - 1].role === 'ai' && newMessages[newMessages.length - 1].isStreaming) {
-                          newMessages[newMessages.length - 1] = { role: 'ai', content: fullAnswer, sources: currentSources, isStreaming: true };
-                      } else {
-                          newMessages.push({ role: 'ai', content: fullAnswer, sources: currentSources, isStreaming: true });
-                      }
-                      return { ...s, messages: newMessages };
+                if (s.id === activeSessionId) {
+                  const newMessages = [...s.messages];
+                  if (newMessages.length > 0 && newMessages[newMessages.length - 1].role === 'ai' && newMessages[newMessages.length - 1].isStreaming) {
+                    newMessages[newMessages.length - 1] = { role: 'ai', content: fullAnswer, sources: currentSources, isStreaming: true };
+                  } else {
+                    newMessages.push({ role: 'ai', content: fullAnswer, sources: currentSources, isStreaming: true });
                   }
-                  return s;
+                  return { ...s, messages: newMessages };
+                }
+                return s;
               }));
-              
+
             } catch (e) {
               console.error("Error parsing stream chunk:", e, line);
             }
@@ -143,14 +144,14 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
       }
 
       setSessions(prev => prev.map(s => {
-          if (s.id === activeSessionId) {
-              const newMessages = [...s.messages];
-              if (newMessages.length > 0 && newMessages[newMessages.length - 1].role === 'ai') {
-                  newMessages[newMessages.length - 1].isStreaming = false;
-              }
-              return { ...s, messages: newMessages };
+        if (s.id === activeSessionId) {
+          const newMessages = [...s.messages];
+          if (newMessages.length > 0 && newMessages[newMessages.length - 1].role === 'ai') {
+            newMessages[newMessages.length - 1].isStreaming = false;
           }
-          return s;
+          return { ...s, messages: newMessages };
+        }
+        return s;
       }));
 
       if (fullAnswer.trim()) {
@@ -167,7 +168,7 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
           console.error("Failed to play audio:", audioError)
         }
       }
-      
+
     } catch (error) {
       console.error("Chat error:", error)
       updateActiveSession({ messages: [...activeSession.messages, userMsg, { role: 'ai', content: 'Neural link failed. Is the backend running?' }] });
@@ -201,12 +202,12 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
         const audioBlob = new Blob(audioChunks.current, { type: 'audio/webm' })
         const formData = new FormData()
         formData.append('file', audioBlob, 'recording.webm')
-        
+
         setIsLoading(true)
         try {
           const response = await axios.post(`${API_BASE_URL}/api/transcribe`, formData)
           const transcribedText = response.data.text
-          
+
           if (transcribedText && transcribedText.trim()) {
             await processChat(transcribedText.trim())
           } else {
@@ -247,9 +248,8 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
       {/* Sidebar matching Image 2 */}
       <aside className="sasi-sidebar">
         <div className="sasi-sidebar-header">
-          <div className="sasi-logo-wrapper">
-            <span className="sasi-s">S</span>
-            <span className="sasi-text">SASI.AI</span>
+          <div className="sasi-logo-wrapper" style={{ width: '150px', height: '40px' }}>
+            <TextHoverEffect text="SASI.AI" />
           </div>
           <button className="sasi-back-btn" onClick={() => navigate('/workspace')}>
             <ArrowLeft size={16} />
@@ -258,18 +258,18 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
 
         <div className="sasi-context-area">
           <h4 className="context-label">CONTEXTUAL RESOURCES</h4>
-          <div 
+          <div
             className="sasi-upload-zone"
             onClick={() => fileInputRef.current?.click()}
           >
-            <input 
-              type="file" 
+            <input
+              type="file"
               multiple={true}
-              ref={fileInputRef} 
-              onChange={handleFileChange} 
+              ref={fileInputRef}
+              onChange={handleFileChange}
               className="file-input"
               accept=".pdf"
-              style={{display: 'none'}}
+              style={{ display: 'none' }}
             />
             <div className="upload-icon-wrapper">
               <Upload size={20} color="#9ca3af" />
@@ -278,15 +278,15 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
               {files.length > 0 ? `${files.length} ASSETS READY` : 'DRAG ASSETS TO UNIFY CONTEXT'}
             </p>
           </div>
-          
-          <button 
-            className="unify-btn" 
+
+          <button
+            className="unify-btn"
             onClick={handleUpload}
             disabled={files.length === 0 || isUploading}
           >
             {isUploading ? <Loader2 className="animate-spin" size={16} /> : 'UNIFY'}
           </button>
-          
+
           {uploadStatus.message && (
             <div className={`sasi-upload-status ${uploadStatus.type}`}>
               {uploadStatus.message}
@@ -309,28 +309,28 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
           {messages.length === 0 && (
             <div className="message ai sasi-message">
               <div className="sasi-avatar">
-                <Bot size={18} color="#a855f7" />
+                <Bot size={18} color="#14b8a6" />
               </div>
               <div className="sasi-message-wrapper">
                 <div className="sasi-message-content">
-                  Neural link established. I'm SASI.AI, your document-aware synthesis engine. How can I assist with your intelligence today?
+                  Hey... I'm SASI.AI, your document-aware synthesis engine. How can I assist with your intelligence today?
                 </div>
                 <div className="sasi-timestamp">{currentTime}</div>
               </div>
             </div>
           )}
-          
+
           {messages.map((msg, idx) => (
             <div key={idx} className={`message ${msg.role} sasi-message`}>
               {msg.role === 'ai' && (
                 <div className="sasi-avatar">
-                  <Bot size={18} color="#a855f7" />
+                  <Bot size={18} color="#14b8a6" />
                 </div>
               )}
               <div className={`sasi-message-wrapper ${msg.role}`}>
                 <div className="sasi-message-content">
                   {msg.content}
-                  
+
                   {msg.sources && msg.sources.length > 0 && !msg.isStreaming && (
                     <div className="sasi-sources">
                       <span className="source-label">Sources:</span>
@@ -346,15 +346,15 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
               </div>
             </div>
           ))}
-          
+
           {isThinking && (
             <div className="message ai sasi-message">
               <div className="sasi-avatar">
-                <Bot size={18} color="#a855f7" />
+                <Bot size={18} color="#14b8a6" />
               </div>
               <div className="sasi-message-wrapper">
                 <div className="sasi-message-content thinking">
-                  <Loader2 className="animate-spin" size={16} style={{marginRight: '8px'}} /> Processing request...
+                  <Loader2 className="animate-spin" size={16} style={{ marginRight: '8px' }} /> Processing request...
                 </div>
               </div>
             </div>

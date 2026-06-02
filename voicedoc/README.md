@@ -1,64 +1,91 @@
-# SASI.AI (VoiceDoc) - Architecture & Technical Documentation
+# SASI.AI (formerly VoiceDoc) - The Complete Guide
 
-Welcome to the internal documentation for **SASI.AI** (formerly VoiceDoc). This document explains exactly how the backend, frontend, AI engines, and desktop executable all fit together.
+Welcome to **SASI.AI**, a powerful, fully local, and completely private AI assistant designed to read your documents, listen to your voice, and answer your questions—all without needing an internet connection.
 
-## 1. High-Level Architecture
+This document is designed for **everyone**, whether you are a non-technical user curious about how it works, or a developer looking to understand the architecture.
 
-SASI.AI is a fully local, offline-capable Retrieval-Augmented Generation (RAG) assistant. It features a modern React frontend wrapped around a powerful FastAPI Python backend.
+---
 
-### The Stack
-- **Frontend**: React, Vite, Lucide-React (Icons), with Holographic/Glassmorphic UI
-- **Backend API**: FastAPI (Python) with Server-Sent Events (SSE) for streaming
-- **AI Orchestration**: LangChain
-- **Vector Database**: ChromaDB
-- **Local LLM**: Ollama (Mistral / Nomic-Embed-Text)
-- **Audio Processing**: OpenAI Whisper (Local)
-- **Desktop Packaging**: PyInstaller
+## 🌟 What is SASI.AI?
 
-## 2. How the Backend Works (`server.py`)
+SASI.AI is a desktop application that acts as your personal, intelligent document assistant. 
+Imagine having a highly knowledgeable intern who has read all your PDFs and can instantly answer any question you have about them. That's SASI.AI.
 
-The terminal backend you see when running `server.py` is an **ASGI Web Server** powered by Uvicorn and FastAPI. It does three main things simultaneously:
+**Key Features:**
+- **Chat with your Documents:** Upload PDFs and ask questions about them.
+- **Voice Interaction:** Speak your questions out loud, and let the AI talk back to you.
+- **100% Private & Local:** Nothing is sent to the cloud. All processing happens on your own computer, ensuring your sensitive data remains completely secure.
+- **Multiple Workspaces:** Work on a legal contract in one window and a biology textbook in another without mixing them up.
 
-### A. Serving the REST API
-The server exposes specific "endpoints" that the React frontend talks to:
-- `POST /upload`: Receives PDF files, passes them to the AI core for processing, and associates them with a `session_id`.
-- `POST /chat`: Receives text messages, queries the local AI for a response using the document context and conversation memory, and streams the answer back in real-time using Server-Sent Events (SSE).
-- `POST /transcribe`: Receives audio voice recordings (via the pulsing microphone toggle) and runs them through the local Whisper AI model to convert speech into text.
-- `POST /speak`: Generates Text-to-Speech (TTS) audio files from the AI's response for voice synthesis.
+---
 
-### B. Serving the React App
-To make this a single cohesive application (instead of requiring you to run a separate Node.js server), `server.py` is configured to serve the `frontend/dist` directory as static files. When you navigate to the root url (`/`), FastAPI returns the compiled React `index.html`.
+## 🤔 Why Build This?
 
-### C. Initializing the AI Engine (`core/rag.py`)
-When the server boots, it immediately creates an instance of the `RAGPipeline`. This loads the connection to ChromaDB and Ollama so they are warm and ready to answer questions.
+In a world where most AI tools (like ChatGPT) require an internet connection and send your data to corporate servers, privacy is a major concern. Businesses and individuals often have sensitive documents (legal files, medical records, proprietary research) that they simply cannot upload to the cloud. 
 
-## 3. How the AI Engine Works (RAG)
+SASI.AI was built to solve this problem: **To provide state-of-the-art AI capabilities entirely on your local machine, guaranteeing 100% data privacy.**
 
-"RAG" stands for Retrieval-Augmented Generation. This is what allows SASI.AI to answer questions based *only* on the documents you upload.
+---
 
-1. **Ingestion (`core/document.py`)**: When you upload a PDF, the backend reads the text, splits it into smaller "chunks" (to fit into the AI's memory limit), and converts those chunks into mathematical vectors (embeddings) using `nomic-embed-text`.
-2. **Storage (ChromaDB)**: These vectors are saved locally in a database folder (`./chroma_db`). Every chunk is tagged with a `session_id`.
-3. **Retrieval (`core/rag.py`)**: When you ask a question, the system searches ChromaDB for chunks that mathematically match your question, filtering strictly by your active `session_id` to ensure context isolation.
-4. **Memory (`core/memory.py`)**: The system utilizes `ConversationBufferMemory` to maintain context-aware conversation history, ensuring the AI remembers previous questions within the same session.
-5. **Generation (Ollama)**: The backend takes your question, the conversation history, AND the retrieved document text, and bundles them into a strict prompt. This prompt is sent to `Mistral` (via Ollama), forcing the AI to answer using *only* the provided text (eliminating hallucinations) and streaming the response token-by-token.
+## 🛠️ How It Works: The Tech Stack Explained
 
-## 4. Multi-Session Isolation
+To make this magic happen, SASI.AI combines several cutting-edge technologies. Let's break them down into simple terms:
 
-SASI.AI supports multiple separate workspaces simultaneously. 
-- When you click "+ New Workspace" in the React UI, the frontend generates a unique `session_id` (e.g., `web-session-abc123`).
-- Every time you upload a file or send a message, the frontend attaches this `session_id` to the request.
-- **Why this matters**: ChromaDB uses this ID to partition your documents. If you upload a Legal Contract to Workspace A, and a Biology Textbook to Workspace B, asking a question in Workspace A will *never* pull information from the Biology Textbook. The AI's context is strictly isolated.
+### 1. The Frontend (What You See)
+The frontend is the visual interface you interact with—the buttons, the chat window, the futuristic "glass" design.
+- **What it is:** React, Vite, and Vanilla CSS (with Holographic/Glassmorphic UI).
+- **Why we use it:** React allows us to build a smooth, dynamic, and responsive user interface. The glassmorphic design gives it a modern, premium feel.
+- **How it works:** It acts as the messenger, taking your clicks, typed text, and voice recordings, and sending them to the "Backend" to be processed.
 
-## 5. How the Desktop App Works (Electron + PyInstaller)
+### 2. The Backend (The Engine Room)
+The backend is the invisible workhorse that handles all the heavy lifting, coordinates the AI models, and manages your files.
+- **What it is:** FastAPI (Python).
+- **Why we use it:** Python is the undisputed king of AI programming. FastAPI makes it incredibly fast and easy to connect our frontend interface to our AI models.
+- **How it works:** It constantly listens for requests from the frontend (like "process this PDF" or "answer this question"). It then orchestrates the different AI models to get the job done and sends the results back to your screen in real-time.
 
-To turn this complex web stack into a single, seamless, double-clickable desktop app, we use a combination of **PyInstaller** and **Electron**.
+### 3. The AI Models (The Brains)
+SASI.AI uses specialized, open-source AI models that run directly on your computer's hardware.
+- **The Thinking Brain (LLM):** We use **Mistral** (via a tool called **Ollama**). This is the AI that actually reads text and formulates intelligent answers.
+- **The Reading Brain (Embeddings):** We use **Nomic-Embed-Text**. This converts human text into math (vectors) so the AI can quickly search through hundreds of pages of a PDF to find the exact paragraph needed.
+- **The Listening Brain (Speech-to-Text):** We use **OpenAI Whisper (Local version)**. It listens to your microphone and perfectly transcribes your spoken words into text.
+- **The Speaking Brain (Text-to-Speech):** We use local Text-to-Speech (TTS) models to read the AI's written answers out loud to you.
 
-1. **Backend Bundling (PyInstaller)**: We use PyInstaller (`build.py`) to trace `server.py` and collect every single Python dependency (FastAPI, LangChain, Torch, Whisper) into a single standalone folder (`dist/VoiceDoc`).
-2. **Frontend Compilation (Vite)**: The React app is compiled into static HTML/CSS/JS files inside `frontend/dist`.
-3. **The Electron Wrapper (`frontend/main.cjs`)**: Electron acts as the native desktop window. When you launch the app, Electron does the following silently:
-   - **Spawns the Backend**: It automatically launches the bundled Python executable (`VoiceDoc.exe`) in the background as a hidden child process.
-   - **Waits for Readiness**: It constantly pings `http://127.0.0.1:8000/` until the Python server is fully booted and ready.
-   - **Displays the UI**: Once the backend responds, Electron finally displays the native desktop window and loads the local server URL. 
-4. **Graceful Shutdown**: When you click the 'X' to close the Electron window, the app listens for the `window-all-closed` event and automatically kills the hidden Python child process, preventing orphaned background processes or port conflicts (e.g., "port 8000 already in use").
+### 4. The Memory (The Database)
+- **What it is:** ChromaDB.
+- **Why we use it:** Traditional databases search for exact words. ChromaDB searches for *meaning*. 
+- **How it works:** When you upload a PDF, the text is broken down into small chunks and stored here. When you ask a question, ChromaDB instantly finds the most relevant chunks of text based on the *concept* of your question, not just the keywords.
 
-This architecture gives you the power of a full Python AI stack, with the clean, frameless user experience of a native Windows application.
+---
+
+## 🧠 The Secret Sauce: How It Reads Your Documents (RAG)
+
+How does the AI know about a document you just uploaded if it wasn't trained on it? It uses a technique called **RAG (Retrieval-Augmented Generation)**.
+
+Here is the step-by-step journey of a question:
+1. **Ingestion:** You upload a PDF. SASI.AI reads the text, chops it into bite-sized pieces, and stores them in its memory (ChromaDB).
+2. **Retrieval:** You ask, "What is the penalty for early termination in this contract?" The system searches the database and grabs only the paragraphs that mention penalties and terminations.
+3. **Prompting:** The backend bundles your question AND those specific paragraphs together. It essentially tells the AI: *"Using ONLY the following text, answer the user's question."*
+4. **Generation:** The AI (Mistral) reads those specific paragraphs and generates a precise, hallucination-free answer.
+
+---
+
+## 🗂️ How Workspaces Stay Separate
+
+SASI.AI lets you open multiple "Workspaces." 
+- **How:** Every time you create a new workspace, the system assigns it a unique secret ID (like `workspace-123`).
+- **Why:** When you upload a document or ask a question, it is tagged with that specific ID. 
+- **The Result:** If you are in Workspace A, the AI is physically restricted to only looking at files tagged with Workspace A's ID. It is impossible for it to accidentally mix up information from your private diary in Workspace B with your work documents in Workspace A.
+
+---
+
+## 📦 How It Becomes a Desktop App
+
+Normally, running AI models, Python servers, and React interfaces requires a developer to type complex commands into a terminal. We fixed that.
+
+- **What we use:** Electron and PyInstaller.
+- **How it works:** 
+  1. We take all the complicated Python AI code and bundle it into a single invisible program (`VoiceDoc.exe`).
+  2. We take the React frontend and wrap it in a native desktop window using **Electron**.
+  3. When you double-click the SASI.AI icon, the app silently starts the Python AI server in the background. Once the server is ready, the beautiful user interface appears on your screen. When you close the window, everything shuts down cleanly.
+
+This gives you the immense power of a full-scale AI architecture, packaged into a simple, double-clickable app that anyone can use!
