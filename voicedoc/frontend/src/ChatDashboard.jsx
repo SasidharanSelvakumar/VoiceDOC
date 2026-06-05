@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { Send, Upload, Bot, User, Loader2, Mic, Paperclip, ArrowLeft } from 'lucide-react'
@@ -38,6 +38,7 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
 
   useEffect(() => {
     scrollToBottom()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages, isLoading])
 
   const handleFileChange = (e) => {
@@ -59,7 +60,7 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(`${API_BASE_URL}/api/upload`, formData, {
+      await axios.post(`${API_BASE_URL}/api/upload`, formData, {
         headers: { 
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}`

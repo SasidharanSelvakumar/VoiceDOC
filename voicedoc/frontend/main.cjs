@@ -20,6 +20,7 @@ function createWindow() {
     minHeight: 600,
     autoHideMenuBar: true,
     show: false, // Don't show until server is ready
+    icon: path.join(__dirname, 'public', 'Sasi.ai_favicon.jpg'),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
@@ -36,7 +37,7 @@ function checkServer() {
   const req = http.get('http://127.0.0.1:8000/', (res) => {
     // If we get a response, the server is ready!
     console.log("Backend server is ready!");
-    mainWindow.loadURL('http://127.0.0.1:8000/');
+    mainWindow.loadURL('http://127.0.0.1:8000/login');
     mainWindow.show();
   });
 

@@ -1,6 +1,5 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bot, Mic, Shield, Zap, Database, ChevronRight, FileText, CheckCircle2, Terminal, Download } from 'lucide-react';
+import { Mic, Shield, Zap, Database, FileText, CheckCircle2, Terminal, Download } from 'lucide-react';
 import { BackgroundLines } from './components/BackgroundLines';
 import { TextHoverEffect } from './components/TextHoverEffect';
 import './LandingPage.css';
@@ -8,9 +7,6 @@ import './LandingPage.css';
 const LandingPage = () => {
   const navigate = useNavigate();
 
-  const handleLaunch = () => {
-    navigate('/chat');
-  };
 
   return (
     <div className="landing-container">
@@ -25,9 +21,9 @@ const LandingPage = () => {
         <div className="nav-logo" style={{ width: '200px', height: '60px' }}>
           <TextHoverEffect text="SASI.AI" />
         </div>
-        <button onClick={() => navigate('/login')} className="nav-cta" style={{ display: 'flex', alignItems: 'center' }}>
+        <a href="/SASI.AI_Setup.exe" download className="nav-cta" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
           Download App
-        </button>
+        </a>
       </nav>
 
       <main className="landing-main">
@@ -42,9 +38,9 @@ const LandingPage = () => {
             private answers with our advanced Retrieval-Augmented Generation engine.
           </p>
           <div className="hero-actions">
-            <button onClick={() => navigate('/login')} className="primary-btn" style={{ border: 'none' }}>
+            <a href="/SASI.AI_Setup.exe" download className="primary-btn" style={{ border: 'none', textDecoration: 'none' }}>
               Download for Windows <Download size={20} />
-            </button>
+            </a>
             <button className="secondary-btn" onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}>
               View Features
             </button>

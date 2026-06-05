@@ -15,8 +15,13 @@
   "build": {
     "appId": "com.sasi.app",
     "productName": "SASI.AI",
+    "files": [
+      "**/*",
+      "!**/*.exe"
+    ],
+    "compression": "store",
     "directories": {
-      "output": "dist-app"
+      "output": "dist-installer"
     },
     "extraResources": [
       {
@@ -28,7 +33,15 @@
       }
     ],
     "win": {
-      "target": "dir"
+      "target": "nsis",
+      "icon": "public/Sasi.ai_favicon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "SASI.AI"
     }
   },
   "dependencies": {

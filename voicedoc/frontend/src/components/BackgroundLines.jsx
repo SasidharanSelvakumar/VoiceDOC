@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 
 const pathVariants = {
@@ -67,8 +66,8 @@ export const BackgroundLines = ({ svgOptions }) => {
               ease: "linear",
               repeat: Infinity,
               repeatType: "loop",
-              delay: Math.floor(Math.random() * 10),
-              repeatDelay: Math.floor(Math.random() * 10 + 2),
+              delay: (idx * 1.5) % 10,
+              repeatDelay: (idx * 2.5) % 10 + 2,
             }}
             key={`path-first-${idx}`}
           />
@@ -88,8 +87,8 @@ export const BackgroundLines = ({ svgOptions }) => {
               ease: "linear",
               repeat: Infinity,
               repeatType: "loop",
-              delay: Math.floor(Math.random() * 10),
-              repeatDelay: Math.floor(Math.random() * 10 + 2),
+              delay: (idx * 1.5) % 10,
+              repeatDelay: (idx * 2.5) % 10 + 2,
             }}
             key={`path-second-${idx}`}
           />

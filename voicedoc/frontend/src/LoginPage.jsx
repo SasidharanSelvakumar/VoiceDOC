@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, User, ChevronRight, Loader2 } from 'lucide-react';
 import { BackgroundLines } from './components/BackgroundLines';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LandingPage from './LandingPage';
@@ -24,7 +24,7 @@ function AppRoutes() {
   // Lifted state: the list of all chat sessions
   const [sessions, setSessions] = useState([
     { 
-      id: `web-session-${Math.random().toString(36).substr(2, 9)}`, 
+      id: `web-session-${Date.now().toString(36)}`, 
       name: 'Product Specification Analysis', 
       messages: [], 
       files: [],

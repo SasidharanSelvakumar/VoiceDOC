@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Settings, Plus, Search, MessageSquare, Clock, FileText, ChevronRight, Edit2, Trash2 } from 'lucide-react';
+import { Settings, Plus, MessageSquare, Clock, FileText, ChevronRight, Edit2, Trash2 } from 'lucide-react';
 import { TextHoverEffect } from './components/TextHoverEffect';
 import './Workspace.css';
 
