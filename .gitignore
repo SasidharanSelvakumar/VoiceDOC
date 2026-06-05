@@ -1,0 +1,16 @@
+# Compiled and Large Files
+voicedoc/frontend/dist-app/
+voicedoc/frontend/dist/
+voicedoc/frontend/node_modules/
+
+# Databases and Uploads
+*.db
+data/
+voicedoc/chroma_db/
+temp_audio/
+temp_uploads/
+
+# Python
+__pycache__/
+*.pyc
+venv/

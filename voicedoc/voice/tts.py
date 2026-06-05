@@ -11,6 +11,7 @@ How it works:
 """
 
 import os
+import uuid
 from gtts import gTTS
 import pygame
 
@@ -68,7 +69,8 @@ class VoiceSpeaker:
         Returns the path to the saved audio file without playing it.
         """
         try:
-            audio_path = os.path.join(self.temp_dir, "response.mp3")
+            filename = f"response_{uuid.uuid4().hex}.mp3"
+            audio_path = os.path.join(self.temp_dir, filename)
             tts = gTTS(text=text, lang='en')
             tts.save(audio_path)
             return audio_path

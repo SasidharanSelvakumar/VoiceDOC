@@ -16,7 +16,7 @@
     "appId": "com.sasi.app",
     "productName": "SASI.AI",
     "directories": {
-      "output": "release"
+      "output": "dist-app"
     },
     "extraResources": [
       {
@@ -32,7 +32,9 @@
     }
   },
   "dependencies": {
+    "@react-oauth/google": "^0.13.5",
     "axios": "^1.16.0",
+    "firebase": "^12.14.0",
     "framer-motion": "^12.40.0",
     "lucide-react": "^1.17.0",
     "react": "^19.2.5",

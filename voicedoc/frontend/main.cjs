@@ -62,7 +62,7 @@ app.whenReady().then(() => {
   console.log(`Launching backend from: ${backendPath}`);
   
   try {
-    pythonProcess = spawn(backendPath, [], { detached: false });
+    pythonProcess = spawn(backendPath, [], { detached: false, windowsHide: true });
     
     pythonProcess.stdout.on('data', (data) => {
       console.log(`Backend stdout: ${data}`);

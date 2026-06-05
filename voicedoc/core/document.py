@@ -13,7 +13,7 @@ How it works:
 import os
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import OllamaEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 
 class DocumentProcessor:
@@ -29,8 +29,8 @@ class DocumentProcessor:
             persist_directory (str): The local directory to store the Chroma vector database.
         """
         self.persist_directory = persist_directory
-        # Initialize Ollama embeddings strictly using the nomic-embed-text model
-        self.embeddings = OllamaEmbeddings(model="nomic-embed-text")
+        # Use HuggingFace CPU embeddings to match the RAG pipeline
+        self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
         
     def process_document(self, file_path: str, session_id: str):
         """
@@ -77,7 +77,7 @@ class DocumentProcessor:
             # 3. Create and persist embeddings in vector store
             print("Step 3: Generating embeddings and saving to Chroma...")
             vectorstore = Chroma.from_documents(
-                collection_name="voicedoc_collection",
+                collection_name="voicedoc_collection_v2",
                 documents=chunks,
                 embedding=self.embeddings,
                 persist_directory=self.persist_directory,

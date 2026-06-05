@@ -14,6 +14,16 @@ class MemoryManager:
             )
         return self.memories[session_id]
         
+    def load_history(self, session_id: str, db_messages: list):
+        """Loads a list of message dicts (from DB) into the memory if it's fresh."""
+        memory = self.get_memory(session_id)
+        if len(memory.chat_memory.messages) == 0:
+            for msg in db_messages:
+                if msg["role"] == "user":
+                    memory.chat_memory.add_user_message(msg["content"])
+                elif msg["role"] == "ai":
+                    memory.chat_memory.add_ai_message(msg["content"])
+        
     def clear_memory(self, session_id: str):
         if session_id in self.memories:
             self.memories[session_id].clear()

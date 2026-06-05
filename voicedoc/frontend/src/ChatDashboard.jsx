@@ -23,9 +23,9 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
   const audioChunks = useRef([])
 
   // Derived state for the active session
-  const activeSession = sessions.find(s => s.id === activeSessionId) || sessions[0];
-  const messages = activeSession ? activeSession.messages : [];
-  const files = activeSession ? activeSession.files : [];
+  const activeSession = sessions.find(s => s.id === activeSessionId) || sessions[0] || {};
+  const messages = activeSession.messages || [];
+  const files = activeSession.files || [];
 
   // Helper to update active session state
   const updateActiveSession = (updates) => {
@@ -58,8 +58,12 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
     files.forEach(f => formData.append('files', f))
 
     try {
+      const token = localStorage.getItem('token');
       const response = await axios.post(`${API_BASE_URL}/api/upload`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`
+        }
       })
       setUploadStatus({ type: 'success', message: 'Context unified.' })
     } catch (error) {
@@ -88,10 +92,23 @@ function ChatDashboard({ sessions, setSessions, activeSessionId }) {
     let fullAnswer = ""
 
     try {
+      const engineType = localStorage.getItem('sasi_engine') || 'local';
+      const apiKey = localStorage.getItem('sasi_api_key') || '';
+
+      const token = localStorage.getItem('token');
+
       const response = await fetch(`${API_BASE_URL}/api/chat`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: text, session_id: activeSessionId })
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ 
+          question: text, 
+          session_id: activeSessionId,
+          engine_type: engineType,
+          api_key: apiKey
+        })
       });
 
       if (!response.ok) {

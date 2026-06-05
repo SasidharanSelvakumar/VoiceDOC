@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Settings, Plus, Search, MessageSquare, Clock, FileText, ChevronRight, Edit2 } from 'lucide-react';
+import { Settings, Plus, Search, MessageSquare, Clock, FileText, ChevronRight, Edit2, Trash2 } from 'lucide-react';
 import { TextHoverEffect } from './components/TextHoverEffect';
 import './Workspace.css';
 
@@ -10,6 +10,39 @@ const Workspace = ({ sessions, setSessions, setActiveSessionId, userEmail = "adm
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState('');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isEngineModalOpen, setIsEngineModalOpen] = useState(false);
+  
+  const [engineType, setEngineType] = useState(() => localStorage.getItem('sasi_engine') || 'local');
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem('sasi_api_key') || '');
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      try {
+        const res = await fetch('http://127.0.0.1:8000/api/chat/history', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.sessions && data.sessions.length > 0) {
+            // Sort by modified desc
+            const sorted = data.sessions.sort((a, b) => new Date(b.modified) - new Date(a.modified));
+            setSessions(sorted);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch history", err);
+      }
+    };
+    fetchHistory();
+  }, [setSessions]);
+
+  const saveEngineSettings = () => {
+    localStorage.setItem('sasi_engine', engineType);
+    localStorage.setItem('sasi_api_key', apiKey);
+    setIsEngineModalOpen(false);
+  };
 
   const handleNewSynthesis = () => {
     const newSession = {
@@ -36,10 +69,23 @@ const Workspace = ({ sessions, setSessions, setActiveSessionId, userEmail = "adm
     setEditName(session.name);
   };
 
-  const saveEditing = (e, id) => {
+  const saveEditing = async (e, id) => {
     e.stopPropagation();
     if (editName.trim()) {
       setSessions(prev => prev.map(s => s.id === id ? { ...s, name: editName.trim() } : s));
+      try {
+        const token = localStorage.getItem('token');
+        await fetch(`http://127.0.0.1:8000/api/chat/session/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ name: editName.trim() })
+        });
+      } catch (err) {
+        console.error("Failed to save session name", err);
+      }
     }
     setEditingId(null);
   };
@@ -49,6 +95,24 @@ const Workspace = ({ sessions, setSessions, setActiveSessionId, userEmail = "adm
       saveEditing(e, id);
     } else if (e.key === 'Escape') {
       setEditingId(null);
+    }
+  };
+
+  const handleDeleteSession = async (e, id) => {
+    e.stopPropagation();
+    if (window.confirm('Are you sure you want to permanently delete this session?')) {
+      setSessions(prev => prev.filter(s => s.id !== id));
+      try {
+        const token = localStorage.getItem('token');
+        await fetch(`http://127.0.0.1:8000/api/chat/session/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+      } catch (err) {
+        console.error("Failed to delete session", err);
+      }
     }
   };
 
@@ -91,6 +155,9 @@ const Workspace = ({ sessions, setSessions, setActiveSessionId, userEmail = "adm
                   </div>
                 </div>
                 <div className="sd-divider"></div>
+                <button className="sd-btn" onClick={() => { setIsSettingsOpen(false); setIsEngineModalOpen(true); }}>
+                  AI Engine Settings
+                </button>
                 <button className="sd-btn" onClick={() => navigate('/login')}>Sign Out</button>
               </div>
             )}
@@ -151,9 +218,14 @@ const Workspace = ({ sessions, setSessions, setActiveSessionId, userEmail = "adm
                     ) : (
                       <>
                         <h3>{session.name}</h3>
-                        <button className="edit-name-btn" onClick={(e) => startEditing(e, session)}>
-                          <Edit2 size={14} />
-                        </button>
+                        <div style={{ display: 'flex', gap: '5px' }}>
+                          <button className="edit-name-btn" onClick={(e) => startEditing(e, session)}>
+                            <Edit2 size={14} />
+                          </button>
+                          <button className="edit-name-btn" onClick={(e) => handleDeleteSession(e, session.id)}>
+                            <Trash2 size={14} color="#ef4444" />
+                          </button>
+                        </div>
                       </>
                     )}
                   </div>
@@ -173,6 +245,49 @@ const Workspace = ({ sessions, setSessions, setActiveSessionId, userEmail = "adm
           </div>
         </div>
       </div>
+
+      {/* Engine Settings Modal */}
+      {isEngineModalOpen && (
+        <div className="modal-overlay" onClick={() => setIsEngineModalOpen(false)} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div className="modal-content" onClick={e => e.stopPropagation()} style={{ backgroundColor: '#111827', padding: '30px', borderRadius: '12px', width: '400px', border: '1px solid #1f2937' }}>
+            <h2 style={{ marginTop: 0, color: '#f3f4f6' }}>AI Engine Settings</h2>
+            <p style={{ color: '#9ca3af', fontSize: '0.9rem', marginBottom: '20px' }}>
+              Choose your synthesis engine. Local guarantees privacy. Cloud guarantees speed on older hardware.
+            </p>
+            
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', color: '#d1d5db', marginBottom: '8px' }}>Engine Mode</label>
+              <select 
+                value={engineType} 
+                onChange={(e) => setEngineType(e.target.value)}
+                style={{ width: '100%', padding: '10px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '6px' }}
+              >
+                <option value="local">Local Privacy Mode (Ollama)</option>
+                <option value="cloud">Cloud Speed Mode (Groq API)</option>
+              </select>
+            </div>
+
+            {engineType === 'cloud' && (
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', color: '#d1d5db', marginBottom: '8px' }}>Groq API Key</label>
+                <input 
+                  type="password" 
+                  value={apiKey} 
+                  onChange={(e) => setApiKey(e.target.value)}
+                  placeholder="gsk_..."
+                  style={{ width: '100%', padding: '10px', backgroundColor: '#1f2937', color: 'white', border: '1px solid #374151', borderRadius: '6px' }}
+                />
+              </div>
+            )}
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <button onClick={() => setIsEngineModalOpen(false)} style={{ padding: '8px 16px', backgroundColor: 'transparent', color: '#9ca3af', border: 'none', cursor: 'pointer' }}>Cancel</button>
+              <button onClick={saveEngineSettings} style={{ padding: '8px 16px', backgroundColor: '#14b8a6', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>Save Settings</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
