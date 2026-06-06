@@ -38,9 +38,12 @@ const LandingPage = () => {
             private answers with our advanced Retrieval-Augmented Generation engine.
           </p>
           <div className="hero-actions">
-            <a href="/SASI.AI_Setup.exe" download className="primary-btn" style={{ border: 'none', textDecoration: 'none' }}>
-              Download for Windows <Download size={20} />
-            </a>
+            <button className="primary-btn" onClick={() => navigate('/login')} style={{ border: 'none', textDecoration: 'none' }}>
+              Log In
+            </button>
+            <button className="primary-btn" onClick={() => navigate('/login')} style={{ border: 'none', textDecoration: 'none' }}>
+              Sign Up
+            </button>
             <button className="secondary-btn" onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}>
               View Features
             </button>
